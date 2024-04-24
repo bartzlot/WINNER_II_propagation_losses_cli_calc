@@ -39,7 +39,7 @@ def validate_round(value, answers_dict):
         raise inquirer.errors.ValidationError(reason="Please enter an integer number", value=answers_dict)
 
 
-def los_data_input():
+def height_of_stations_input():
 
     clear_screen()
     questions = [
@@ -51,6 +51,20 @@ def los_data_input():
 
     return answers
 
+
+def nlos_b1_input():
+
+    questions = [
+
+        inquirer.Text('h_bs', message="Enter the height of the base station (m)",validate=validate_number),
+        inquirer.Text('h_ms', message="Enter the height of the mobile station (m)",validate=validate_number),
+        inquirer.Text('d1', message="Enter length of the street rectangular grid(m)",validate=validate_number),
+        inquirer.Text('d2', message="Enter width of the street rectangular grid(m)",validate=validate_number),
+        inquirer.Text('w', message="Enter total width of the street(m)",validate=validate_number),
+    ]
+    answers = inquirer.prompt(questions)
+
+    return answers
 
 def scenario_input():
 
@@ -96,8 +110,6 @@ def main_menu():
     answers = inquirer.prompt(questions)
 
     return answers['main_menu']
-
-
 
 
 def calculation_menu():

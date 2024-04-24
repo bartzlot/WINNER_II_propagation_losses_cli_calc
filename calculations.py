@@ -64,7 +64,7 @@ class WinnerCalculator():
                                 * math.log10(self.frequency/5), self.round)
 
                 #option 2: d_bp < d < 5km
-                if self.distnace > d_bp and self.distance < 5000:
+                elif self.distnace > d_bp and self.distance < 5000:
 
                     return round(40 * math.log10(self.distance) + 9.45 - 17.3 * math.log10(h_bs)
                                 - 17.3 * math.log10(h_ms) + 2.7 * math.log10(self.frequency/5), self.round)
@@ -76,15 +76,17 @@ class WinnerCalculator():
                 d_bp = 4 * h_bs * h_ms * self.frequency / (3 * 10**8)
 
                 #option 1: 10m < d < d_bp
+                if self.distance < d_bp and self.distance > 10:
 
-                return round(self.scenarios['C2']['A'] * math.log10(self.distance)
-                             + self.scenarios['C2']['B'] + self.scenarios['C2']['C'] 
-                             * math.log10(self.frequency/5), self.round)
+                    return round(self.scenarios['C2']['A'] * math.log10(self.distance)
+                                + self.scenarios['C2']['B'] + self.scenarios['C2']['C'] 
+                                * math.log10(self.frequency/5), self.round)
               
                 #option 2: d_bp < d < 5km
+                elif self.distnace > d_bp and self.distance < 5000:
 
-                return round(40 * math.log10(self.distance) + 13.47 - 14 * math.log10(h_bs)
-                            - 14 * math.log10(h_ms) + 6 * math.log10(self.frequency/5), self.round)
+                    return round(40 * math.log10(self.distance) + 13.47 - 14 * math.log10(h_bs)
+                                - 14 * math.log10(h_ms) + 6 * math.log10(self.frequency/5), self.round)
 
             elif self.scenario == "D1": 
 
@@ -93,41 +95,53 @@ class WinnerCalculator():
                 d_bp = 4 * h_bs * h_ms * self.frequency / (3 * 10**8)
                 
                 #option 1: 30m < d < d_bp
+                if self.distance < d_bp and self.distance > 30:
 
-                return round(self.scenarios['D1']['A'] * math.log10(self.distance)
-                             + self.scenarios['D1']['B'] + self.scenarios['D1']['C'] 
-                             * math.log10(self.frequency/5), self.round)
+                    return round(self.scenarios['D1']['A'] * math.log10(self.distance)
+                                + self.scenarios['D1']['B'] + self.scenarios['D1']['C'] 
+                                * math.log10(self.frequency/5), self.round)
               
             
                 #option 2: d_bp < d < 5km
+                elif self.distnace > d_bp and self.distance < 5000:
 
-                return round(40 * math.log10(self.distance) + 10.5 - 18.5 * math.log10(h_bs)
-                            - 18.5 * math.log10(h_ms) + 1.5 * math.log10(self.frequency/5), self.round)    
+                    return round(40 * math.log10(self.distance) + 10.5 - 18.5 * math.log10(h_bs)
+                                - 18.5 * math.log10(h_ms) + 1.5 * math.log10(self.frequency/5), self.round)    
                 
         elif self.line_of_sight == "NLOS":
             
             if self.scenario == "B1": #10m < d1 < 5km, w/2 < d2 < 2km,
-
-                w = 20 #street width
-                d1 = 2 #d1 d2 - size of rectangular block of street for example
-                d2 = 4
+                
+                w = 20 #w - total width of the street
+                d1 = 2 #d1 - length of the streetrectangular grid
+                d2 = 4 #d2 - width of the street rectangular grid
                 h_bs = 10
                 h_ms = 1.5
-
-                pl_los = (40 * math.log10(d1) + 9.45 - 17.3 * math.log10(h_bs) - 
-                          17.3 * math.log10(h_ms) + 2.7 * math.log10(self.frequency/5))
-                
                 nj_d1_d2 = max(2.8 - 0.0024 * d1, 1.84)
+                nj_d2_d1= max(2.8 - 0.0024 * d2, 1.84)
                 # 0 < d2 , w/2 pl_los is applided to pl_nlos
-                pl_d1_d2 = pl_los + 20 - 12.5 * nj_d1_d2 + 10 * nj_d1_d2 * math.log10(d2) + 3 * math.log10(self.frequency/5)
+                if d2 > 0 and d2 < (w/2):
 
-                pl_los = (40 * math.log10(d2) + 9.45 - 17.3 * math.log10(h_bs) - 
-                          17.3 * math.log10(h_ms) + 2.7 * math.log10(self.frequency/5))
+                    pl_los = (40 * math.log10(d1) + 9.45 - 17.3 * math.log10(h_bs) - 
+                            17.3 * math.log10(h_ms) + 2.7 * math.log10(self.frequency/5))
+                    
+                    pl_d1_d2 = pl_los + 20 - 12.5 * nj_d1_d2 + 10 * nj_d1_d2 * math.log10(d2) + 3 * math.log10(self.frequency/5)
+
+                    pl_los = (40 * math.log10(d2) + 9.45 - 17.3 * math.log10(h_bs) - 
+                            17.3 * math.log10(h_ms) + 2.7 * math.log10(self.frequency/5))
+                    
+                    pl_d2_d1 = pl_los + 20 - 12.5 * nj_d1_d2 + 10 * nj_d1_d2 * math.log10(d1) + 3 * math.log10(self.frequency/5)
+
+                    return round(min(pl_d1_d2, pl_d2_d1), self.round)
+
+                else: 
+
+                    pl_d1_d2 = 20 - 12.5 * nj_d1_d2 + 10 * nj_d1_d2 * math.log10(d2) + 3 * math.log10(self.frequency/5)
+                    
+                    pl_d2_d1 = 20 - 12.5 * nj_d1_d2 + 10 * nj_d1_d2 * math.log10(d1) + 3 * math.log10(self.frequency/5)
+
+                    return round(min(pl_d1_d2, pl_d2_d1), self.round)
                 
-                pl_d2_d1 = pl_los + 20 - 12.5 * nj_d1_d2 + 10 * nj_d1_d2 * math.log10(d1) + 3 * math.log10(self.frequency/5)
-
-                return round(min(pl_d1_d2, pl_d2_d1), self.round)
-
             elif self.scenario == "C2":  #50m < d < 5km
 
                 h_bs = 25
