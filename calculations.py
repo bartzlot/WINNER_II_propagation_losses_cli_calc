@@ -69,7 +69,6 @@ class WinnerCalculator():
             
             elif self.scenario == "C2":  
 
-                d = 20
                 h_bs = 25
                 h_ms = 1.5
                 d_bp = 4 * h_bs * h_ms * self.frequency / (3 * 10**8)
@@ -87,7 +86,6 @@ class WinnerCalculator():
 
             elif self.scenario == "D1": 
 
-                d = 20
                 h_bs = 32
                 h_ms = 1.5
                 d_bp = 4 * h_bs * h_ms * self.frequency / (3 * 10**8)
@@ -108,8 +106,8 @@ class WinnerCalculator():
             
             if self.scenario == "B1": #10m < d1 < 5km, w/2 < d2 < 2km,
 
-                w = 20
-                d1 = 2
+                w = 20 #street width
+                d1 = 2 #d1 d2 - size of rectangular block of street for example
                 d2 = 4
                 h_bs = 10
                 h_ms = 1.5
@@ -130,22 +128,20 @@ class WinnerCalculator():
 
             elif self.scenario == "C2":  #50m < d < 5km
 
-                d = 20
                 h_bs = 25
                 h_ms = 1.5
 
-                return round((44.9 - 6.55 * math.log10(h_bs)) * math.log10(d) 
+                return round((44.9 - 6.55 * math.log10(h_bs)) * math.log10(self.distance) 
                              + 34.46 + 5.83 * math.log10(h_bs) + 23.3 
                              * math.log10(self.frequency/5), self.round)
 
             elif self.scenario == "D1": #50m < d < 5km
 
-                d = 20
                 h_bs = 32
                 h_ms = 1.5
 
-                return round(25.11 * math.log10(d) + 55.4 - 0.13 * math.log10(h_bs - 25) 
-                             * math.log10(d/100) - 0.9 * math.log10(h_ms - 1.5) + 21.3 
+                return round(25.11 * math.log10(self.distance) + 55.4 - 0.13 * math.log10(h_bs - 25) 
+                             * math.log10(self.distance/100) - 0.9 * math.log10(h_ms - 1.5) + 21.3 
                              * math.log10(self.frequency/5), self.round)
 
 calc = WinnerCalculator("Winner", "B1", "LOS", 2.4, 10, 2)
