@@ -21,17 +21,17 @@ class WinnerCalculator():
         }
     }
 
-    def __init__(self, measure_name: str, scenario: str, line_of_sight: str,frequency, 
+    def __init__(self, measurement_name: str, scenario: str, line_of_sight: str,frequency, 
                  distance, res_round):
         
-        if not isinstance(measure_name, str):
+        if not isinstance(measurement_name, str):
             raise ValueError("measure_name must be a string")
         if not isinstance(scenario, str):
             raise ValueError("scenario must be a string")
         if not isinstance(line_of_sight, str):
             raise ValueError("line_of_sight must be a string")
         
-        self.measure_name = measure_name
+        self.measurement_name = measurement_name
         self.scenario = scenario
         self.line_of_sight = line_of_sight
         self.frequency = frequency
@@ -42,7 +42,7 @@ class WinnerCalculator():
 
     def __str__(self):
         
-        return f"{self.result}"
+        return f"{self.result} dB"
 
 
     def calculate_winner_model(self):
@@ -57,15 +57,17 @@ class WinnerCalculator():
                 d_bp = 4 * h_bs * h_ms * self.frequency / (3 * 10**8)
 
                 #option 1: 10m< d < d_bp
+                if self.distance < d_bp and self.distance > 10:
 
-                return round(self.scenario['B1']['A'] * math.log10(self.distance)
-                             + self.scenario['B1']['B'] + self.scenario['B1']['C'] 
-                             * math.log10(self.frequency/5), self.round)
+                    return round(self.scenarios['B1']['A'] * math.log10(self.distance)
+                                + self.scenarios['B1']['B'] + self.scenarios['B1']['C'] 
+                                * math.log10(self.frequency/5), self.round)
 
                 #option 2: d_bp < d < 5km
+                if self.distnace > d_bp and self.distance < 5000:
 
-                return round(40 * math/log10(self.distance) + 9.45 - 17.3 * math.log10(h_bs)
-                            - 17.3 * math.log10(h_ms) + 2.7 * math.log10(self.frequency/5), self.round)
+                    return round(40 * math.log10(self.distance) + 9.45 - 17.3 * math.log10(h_bs)
+                                - 17.3 * math.log10(h_ms) + 2.7 * math.log10(self.frequency/5), self.round)
             
             elif self.scenario == "C2":  
 
@@ -75,8 +77,8 @@ class WinnerCalculator():
 
                 #option 1: 10m < d < d_bp
 
-                return round(self.scenario['C2']['A'] * math.log10(self.distance)
-                             + self.scenario['C2']['B'] + self.scenario['C2']['C'] 
+                return round(self.scenarios['C2']['A'] * math.log10(self.distance)
+                             + self.scenarios['C2']['B'] + self.scenarios['C2']['C'] 
                              * math.log10(self.frequency/5), self.round)
               
                 #option 2: d_bp < d < 5km
@@ -92,8 +94,8 @@ class WinnerCalculator():
                 
                 #option 1: 30m < d < d_bp
 
-                return round(self.scenario['D1']['A'] * math.log10(self.distance)
-                             + self.scenario['D1']['B'] + self.scenario['D1']['C'] 
+                return round(self.scenarios['D1']['A'] * math.log10(self.distance)
+                             + self.scenarios['D1']['B'] + self.scenarios['D1']['C'] 
                              * math.log10(self.frequency/5), self.round)
               
             
@@ -144,8 +146,7 @@ class WinnerCalculator():
                              * math.log10(self.distance/100) - 0.9 * math.log10(h_ms - 1.5) + 21.3 
                              * math.log10(self.frequency/5), self.round)
 
-calc = WinnerCalculator("Winner", "B1", "LOS", 2.4, 10, 2)
-print(calc)
+
     
 
     
