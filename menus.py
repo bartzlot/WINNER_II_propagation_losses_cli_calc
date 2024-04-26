@@ -11,6 +11,50 @@ def clear_screen():
         system('clear')
 
 
+def values_confirmation(values):
+
+    clear_screen()
+
+    for key, value in values.items():
+        print(f"{key}: {value}")
+
+    questions = [
+        inquirer.Confirm('confirm', message=f"Are you sure you want to use these values?")
+    ]
+    answers = inquirer.prompt(questions)
+
+    return answers['confirm']
+
+
+def values_input_edit(values):
+
+    clear_screen()
+
+    questions = [
+        inquirer.Checkbox('values', message="Choose values to edit", choices=[key for key in values.keys()])
+    ]
+
+    answers = inquirer.prompt(questions)
+
+    for key in answers['values']:
+
+        if key == 'measurement_name':
+            questions = [
+                inquirer.Text(key, message=f"Enter the new value for {key}", default=values[key])
+            ]
+
+        else:
+            questions = [
+                inquirer.Text(key, message=f"Enter the new value for {key}", default=values[key], validate=validate_number)
+            ]
+        
+        new_values = inquirer.prompt(questions)
+        values[key] = new_values[key]
+    
+    return values
+    
+
+
 def validate_number(value, answers_dict):
     clear_screen()
     try:
@@ -49,7 +93,7 @@ def height_of_stations_input():
     ]
     answers = inquirer.prompt(questions)
 
-    return answers
+    return float(answers['h_bs']), float(answers['h_ms'])
 
 
 def nlos_b1_input():
@@ -64,7 +108,9 @@ def nlos_b1_input():
     ]
     answers = inquirer.prompt(questions)
 
-    return answers
+    return (float(answers['h_bs']), float(answers['h_ms']),
+             float(answers['d1']), float(answers['d2']), 
+             float(answers['w']))
 
 def scenario_input():
 
@@ -93,11 +139,18 @@ def default_values_input():
         inquirer.Text('measurement_name', message="Enter the name of the measurement"),
         inquirer.Text('frequency', message="Enter the frequency (GHz)",validate=validate_number),
         inquirer.Text('distance', message="Enter the distance (m)",validate=validate_number),
-        inquirer.Text('res_round', message="Enter the number of decimal places to round the result",validate=validate_round)
+        inquirer.Text('res_round', message="Enter the number of decimal places to round the result",validate=validate_round),
     ]
     answers = inquirer.prompt(questions)
+    confirm = values_confirmation(answers)
 
-    return answers
+    if confirm:
+        return answers
+    
+    else:
+
+        answers = values_input_edit(answers)
+        return answers
 
 
 def main_menu():

@@ -1,5 +1,8 @@
 import math
 
+from menus import (height_of_stations_input, 
+                    nlos_b1_input)
+
 
 class WinnerCalculator():
 
@@ -50,10 +53,8 @@ class WinnerCalculator():
         if self.line_of_sight == "LOS":
 
             if self.scenario == "B1": 
-
                 
-                h_bs = 10
-                h_ms = 1.5
+                h_bs, h_ms = height_of_stations_input()
                 d_bp = 4 * h_bs * h_ms * self.frequency / (3 * 10**8)
 
                 #option 1: 10m< d < d_bp
@@ -64,15 +65,14 @@ class WinnerCalculator():
                                 * math.log10(self.frequency/5), self.round)
 
                 #option 2: d_bp < d < 5km
-                elif self.distnace > d_bp and self.distance < 5000:
+                elif self.distance > d_bp and self.distance < 5000:
 
                     return round(40 * math.log10(self.distance) + 9.45 - 17.3 * math.log10(h_bs)
                                 - 17.3 * math.log10(h_ms) + 2.7 * math.log10(self.frequency/5), self.round)
             
             elif self.scenario == "C2":  
 
-                h_bs = 25
-                h_ms = 1.5
+                h_bs, h_ms = height_of_stations_input()
                 d_bp = 4 * h_bs * h_ms * self.frequency / (3 * 10**8)
 
                 #option 1: 10m < d < d_bp
@@ -83,15 +83,14 @@ class WinnerCalculator():
                                 * math.log10(self.frequency/5), self.round)
               
                 #option 2: d_bp < d < 5km
-                elif self.distnace > d_bp and self.distance < 5000:
+                elif self.distance > d_bp and self.distance < 5000:
 
                     return round(40 * math.log10(self.distance) + 13.47 - 14 * math.log10(h_bs)
                                 - 14 * math.log10(h_ms) + 6 * math.log10(self.frequency/5), self.round)
 
             elif self.scenario == "D1": 
 
-                h_bs = 32
-                h_ms = 1.5
+                h_bs, h_ms = height_of_stations_input()
                 d_bp = 4 * h_bs * h_ms * self.frequency / (3 * 10**8)
                 
                 #option 1: 30m < d < d_bp
@@ -103,7 +102,7 @@ class WinnerCalculator():
               
             
                 #option 2: d_bp < d < 5km
-                elif self.distnace > d_bp and self.distance < 5000:
+                elif self.distance > d_bp and self.distance < 5000:
 
                     return round(40 * math.log10(self.distance) + 10.5 - 18.5 * math.log10(h_bs)
                                 - 18.5 * math.log10(h_ms) + 1.5 * math.log10(self.frequency/5), self.round)    
@@ -112,11 +111,8 @@ class WinnerCalculator():
             
             if self.scenario == "B1": #10m < d1 < 5km, w/2 < d2 < 2km,
                 
-                w = 20 #w - total width of the street
-                d1 = 2 #d1 - length of the streetrectangular grid
-                d2 = 4 #d2 - width of the street rectangular grid
-                h_bs = 10
-                h_ms = 1.5
+                
+                h_bs, h_ms, d1, d2, w = nlos_b1_input()
                 nj_d1_d2 = max(2.8 - 0.0024 * d1, 1.84)
                 nj_d2_d1= max(2.8 - 0.0024 * d2, 1.84)
                 # 0 < d2 , w/2 pl_los is applided to pl_nlos
@@ -144,8 +140,7 @@ class WinnerCalculator():
                 
             elif self.scenario == "C2":  #50m < d < 5km
 
-                h_bs = 25
-                h_ms = 1.5
+                h_bs, h_ms = height_of_stations_input()
 
                 return round((44.9 - 6.55 * math.log10(h_bs)) * math.log10(self.distance) 
                              + 34.46 + 5.83 * math.log10(h_bs) + 23.3 
@@ -153,8 +148,7 @@ class WinnerCalculator():
 
             elif self.scenario == "D1": #50m < d < 5km
 
-                h_bs = 32
-                h_ms = 1.5
+                h_bs, h_ms = height_of_stations_input()
 
                 return round(25.11 * math.log10(self.distance) + 55.4 - 0.13 * math.log10(h_bs - 25) 
                              * math.log10(self.distance/100) - 0.9 * math.log10(h_ms - 1.5) + 21.3 
