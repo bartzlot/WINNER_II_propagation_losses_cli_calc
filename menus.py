@@ -19,7 +19,8 @@ def values_confirmation(values):
         print(f"{key}: {value}")
 
     questions = [
-        inquirer.Confirm('confirm', message=f"Are you sure you want to use these values?")
+        inquirer.List('confirm', message="Do you want to confirm the values?", 
+                      choices=['Next', 'Back', 'Edit values', 'Main menu'])
     ]
     answers = inquirer.prompt(questions)
 
@@ -52,6 +53,19 @@ def values_input_edit(values):
         values[key] = new_values[key]
     
     return values
+
+
+def list_input_edit(values):
+
+    clear_screen()
+
+    questions = [
+        inquirer.List('values', message="Choose value again", choices=values)
+    ]
+
+    answers = inquirer.prompt(questions)
+
+    return answers['values']
     
 
 
@@ -115,11 +129,26 @@ def nlos_b1_input():
 def scenario_input():
 
     clear_screen()
+    choices = ['B1', 'C2', 'D1']
     questions = [
-        inquirer.List('scenario', message="Choose a scenario", choices=['B1', 'C2', 'D1'])
+        inquirer.List('scenario', message="Choose a scenario", choices=choices)
     ]
     answers = inquirer.prompt(questions)
 
+    confirm = values_confirmation(answers)
+
+    if confirm == 'Next':
+        return answers
+    
+    elif confirm == 'Back':
+        return 'Back'
+
+    elif confirm == 'Edit values':
+        return list_input_edit(choices)
+    
+    elif confirm == 'Main menu':
+        return 'Main menu'
+    
     return answers['scenario']
 
 
@@ -129,6 +158,8 @@ def line_of_sight_input():
         inquirer.List('line_of_sight', message="Choose a line of sight", choices=['LOS', 'NLOS'])
     ]
     answers = inquirer.prompt(questions)
+
+
 
     return answers['line_of_sight']
 
@@ -144,14 +175,18 @@ def default_values_input():
     answers = inquirer.prompt(questions)
     confirm = values_confirmation(answers)
 
-    if confirm:
+    if confirm == 'Next':
         return answers
     
-    else:
+    elif confirm == 'Back':
+        return 'Back'
 
-        answers = values_input_edit(answers)
-        return answers
-
+    elif confirm == 'Edit values':
+        return values_input_edit(answers)
+    
+    elif confirm == 'Main menu':
+        return 'Main menu'
+        
 
 def main_menu():
 

@@ -12,6 +12,13 @@ if __name__ == "__main__":
         if choice == "Calculate Winner Model":
 
             def_values = default_values_input()
+
+            if def_values == 'Main menu':
+                continue
+
+            elif def_values == 'Back':
+                continue
+
             scenario = scenario_input()
             line_of_sight = line_of_sight_input()
 
