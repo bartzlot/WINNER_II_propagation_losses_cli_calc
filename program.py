@@ -22,24 +22,9 @@ if __name__ == "__main__":
             else:
                 continue
 
-            # if def_values == 'Main menu':
-            #     continue
-
-            # elif def_values == 'Back':
-            #     continue
-
-            # scenario = scenario_input()
-            # if def_values == 'Main menu':
-            #     continue
-
-            # elif def_values == 'Back':
-            #     def_values.edit_input()
-            
-            # line_of_sight = line_of_sight_input()
-
-            calc = WinnerCalculator(str(def_values['measurement_name']), scenario, line_of_sight, 
-                                    float(def_values['frequency']), float(def_values['distance']), 
-                                    int(def_values['res_round']))
+            calc = WinnerCalculator(str(def_values.answers['measurement_name']), scenario.answers, 
+                                    line_of_sight.answers, float(def_values.answers['frequency']), 
+                                    float(def_values.answers['distance']), int(def_values.answers['res_round']))
             print(calc)
             input()
 
