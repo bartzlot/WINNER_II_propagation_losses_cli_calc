@@ -2,6 +2,118 @@ import inquirer
 import inquirer.errors
 from os import name, system
 
+def main_menu():
+
+    clear_screen()
+    questions = [
+        inquirer.List('main_menu', message="WINNER II Calculator (choose an option using arrow keys)", 
+                      choices=['Calculate Winner Model', 'Measurement sets','Exit'])
+    ]
+    answers = inquirer.prompt(questions)
+
+    return answers['main_menu']
+
+class MenuEngine:
+
+
+    def __init__(self, *args):
+        
+        self.menu_listing = args
+
+
+    def run_menus(self):
+
+        self.menu_running = 0
+
+        while True:
+                
+                choice = self.menu_listing[self.menu_running].get_input()
+    
+                if choice == 'Main menu':
+                    return False
+    
+                elif choice == 'Back':
+
+                    if self.menu_running == 0:
+                        return False
+
+                    self.menu_running -= 1
+    
+                else:
+                    
+                    if self.menu_running == len(self.menu_listing) - 1:
+                        break
+                    self.menu_running += 1
+
+        return True
+
+
+class DefaultValuesInput:
+    
+        answers = None
+        def __init__(self):
+            self.questions = [
+                inquirer.Text('measurement_name', message="Enter the name of the measurement"),
+                inquirer.Text('frequency', message="Enter the frequency (GHz)",validate=validate_number),
+                inquirer.Text('distance', message="Enter the distance (m)",validate=validate_number),
+                inquirer.Text('res_round', message="Enter the number of decimal places to round the result",validate=validate_round),
+            ]
+    
+        def get_input(self):
+
+            if self.answers is None:
+                self.answers = inquirer.prompt(self.questions)
+                confirm = values_confirmation(self.answers)
+
+            else:
+                confirm = values_confirmation(self.answers)
+
+            return confirmation_condition(confirm, self.answers)
+        
+
+class ScenarioInput:
+
+    answers = None
+    def __init__(self):
+        self.questions = [
+            inquirer.List('scenario', message="Choose a scenario", choices=['B1', 'C2', 'D1'])
+        ]
+
+    def get_input(self):
+
+        self.answers = inquirer.prompt(self.questions)
+        confirm = values_confirmation(self.answers['scenario'])
+    
+        return confirmation_condition(confirm, self.answers['scenario'], values_list=['B1', 'C2', 'D1'])
+    
+    def edit_input(self):
+
+        confirm = values_confirmation(self.answers['scenario'])
+    
+        return confirmation_condition(confirm, self.answers['scenario'], values_list=['B1', 'C2', 'D1'])
+    
+
+class LineOfSightInput:
+
+    answers = None
+    def __init__(self):
+        self.questions = [
+            inquirer.List('line_of_sight', message="Choose a line of sight", choices=['LOS', 'NLOS'])
+        ]
+
+    def get_input(self):
+
+        self.answers = inquirer.prompt(self.questions)
+        confirm = values_confirmation(self.answers['line_of_sight'])
+    
+        return confirmation_condition(confirm, self.answers['line_of_sight'], values_list=['LOS', 'NLOS'])
+    
+    def edit_input(self):
+
+        confirm = values_confirmation(self.answers['line_of_sight'])
+    
+        return confirmation_condition(confirm, self.answers['line_of_sight'], values_list=['LOS', 'NLOS'])
+
 def clear_screen():
 
     if name == 'nt':
@@ -10,13 +122,36 @@ def clear_screen():
     else:
         system('clear')
 
+def confirmation_condition(confirmation_choice, answers, values_list=None):
+
+    if confirmation_choice == 'Next':
+        return answers
+    
+    elif confirmation_choice == 'Back':
+        return 'Back'
+
+    elif confirmation_choice == 'Edit values':
+
+        if isinstance(answers, dict):
+            return values_input_edit(answers)
+        
+        else:
+            return list_input_edit(values_list)
+    
+    elif confirmation_choice == 'Main menu':
+        return 'Main menu'
+
 
 def values_confirmation(values):
 
     clear_screen()
 
-    for key, value in values.items():
-        print(f"{key}: {value}")
+    if isinstance(values, dict):
+        for key, value in values.items():
+            print(f"{key}: {value}")
+    
+    else:
+        print(f"Current answer: {values}")
 
     questions = [
         inquirer.List('confirm', message="Do you want to confirm the values?", 
@@ -106,12 +241,15 @@ def height_of_stations_input():
         inquirer.Text('h_ms', message="Enter the height of the mobile station (m)",validate=validate_number)
     ]
     answers = inquirer.prompt(questions)
+    confirm = values_confirmation(answers)
+    correct_ans = confirmation_condition(confirm, answers)
 
-    return float(answers['h_bs']), float(answers['h_ms'])
+    return (float(correct_ans['h_bs']), float(correct_ans['h_ms']))
 
 
 def nlos_b1_input():
 
+    clear_screen()
     questions = [
 
         inquirer.Text('h_bs', message="Enter the height of the base station (m)",validate=validate_number),
@@ -126,78 +264,56 @@ def nlos_b1_input():
              float(answers['d1']), float(answers['d2']), 
              float(answers['w']))
 
-def scenario_input():
+# def scenario_input():
 
-    clear_screen()
-    choices = ['B1', 'C2', 'D1']
-    questions = [
-        inquirer.List('scenario', message="Choose a scenario", choices=choices)
-    ]
-    answers = inquirer.prompt(questions)
-
-    confirm = values_confirmation(answers)
-
-    if confirm == 'Next':
-        return answers
+#     clear_screen()
+#     choices = ['B1', 'C2', 'D1']
+#     questions = [
+#         inquirer.List('scenario', message="Choose a scenario", choices=choices)
+#     ]
+#     answers = inquirer.prompt(questions)
+#     confirm = values_confirmation(answers['scenario'])
     
-    elif confirm == 'Back':
-        return 'Back'
+#     return confirmation_condition(confirm, answers['scenario'], values_list=choices)
 
-    elif confirm == 'Edit values':
-        return list_input_edit(choices)
+
+# def line_of_sight_input():
+
+#     choices = ['LOS', 'NLOS']
+#     questions = [
+#         inquirer.List('line_of_sight', message="Choose a line of sight", choices=choices)
+#     ]
+#     answers = inquirer.prompt(questions)
+#     confirm = values_confirmation(answers['line_of_sight'])
     
-    elif confirm == 'Main menu':
-        return 'Main menu'
-    
-    return answers['scenario']
-
-
-def line_of_sight_input():
-
-    questions = [
-        inquirer.List('line_of_sight', message="Choose a line of sight", choices=['LOS', 'NLOS'])
-    ]
-    answers = inquirer.prompt(questions)
+#     return confirmation_condition(confirm, answers['line_of_sight'], values_list=choices)
 
 
 
-    return answers['line_of_sight']
+# def default_values_input():
 
+#     questions = [
+#         inquirer.Text('measurement_name', message="Enter the name of the measurement"),
+#         inquirer.Text('frequency', message="Enter the frequency (GHz)",validate=validate_number),
+#         inquirer.Text('distance', message="Enter the distance (m)",validate=validate_number),
+#         inquirer.Text('res_round', message="Enter the number of decimal places to round the result",validate=validate_round),
+#     ]
+#     answers = inquirer.prompt(questions)
+#     confirm = values_confirmation(answers)
 
-def default_values_input():
-
-    questions = [
-        inquirer.Text('measurement_name', message="Enter the name of the measurement"),
-        inquirer.Text('frequency', message="Enter the frequency (GHz)",validate=validate_number),
-        inquirer.Text('distance', message="Enter the distance (m)",validate=validate_number),
-        inquirer.Text('res_round', message="Enter the number of decimal places to round the result",validate=validate_round),
-    ]
-    answers = inquirer.prompt(questions)
-    confirm = values_confirmation(answers)
-
-    if confirm == 'Next':
-        return answers
-    
-    elif confirm == 'Back':
-        return 'Back'
-
-    elif confirm == 'Edit values':
-        return values_input_edit(answers)
-    
-    elif confirm == 'Main menu':
-        return 'Main menu'
+#     return confirmation_condition(confirm, answers)
         
 
-def main_menu():
+# def main_menu():
 
-    clear_screen()
-    questions = [
-        inquirer.List('main_menu', message="WINNER II Calculator (choose an option using arrow keys)", 
-                      choices=['Calculate Winner Model', 'Measurement sets','Exit'])
-    ]
-    answers = inquirer.prompt(questions)
+#     clear_screen()
+#     questions = [
+#         inquirer.List('main_menu', message="WINNER II Calculator (choose an option using arrow keys)", 
+#                       choices=['Calculate Winner Model', 'Measurement sets','Exit'])
+#     ]
+#     answers = inquirer.prompt(questions)
 
-    return answers['main_menu']
+#     return answers['main_menu']
 
 
 def calculation_menu():

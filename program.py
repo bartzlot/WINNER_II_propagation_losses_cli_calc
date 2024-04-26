@@ -1,6 +1,6 @@
 from menus import (main_menu, calculation_menu, 
-                    scenario_input, line_of_sight_input, 
-                    default_values_input)
+                    ScenarioInput, DefaultValuesInput,
+                    LineOfSightInput, MenuEngine)
 from calculations import WinnerCalculator
 
 if __name__ == "__main__":
@@ -11,18 +11,33 @@ if __name__ == "__main__":
 
         if choice == "Calculate Winner Model":
 
-            def_values = default_values_input()
+            def_values = DefaultValuesInput()
+            scenario = ScenarioInput()
+            line_of_sight = LineOfSightInput()
+            calc_menu_engine = MenuEngine(def_values, scenario, line_of_sight)
 
-            if def_values == 'Main menu':
+            if calc_menu_engine.run_menus():
+                pass
+
+            else:
                 continue
 
-            elif def_values == 'Back':
-                continue
+            # if def_values == 'Main menu':
+            #     continue
 
-            scenario = scenario_input()
-            line_of_sight = line_of_sight_input()
+            # elif def_values == 'Back':
+            #     continue
 
-            calc = WinnerCalculator(def_values['measurement_name'], scenario, line_of_sight, 
+            # scenario = scenario_input()
+            # if def_values == 'Main menu':
+            #     continue
+
+            # elif def_values == 'Back':
+            #     def_values.edit_input()
+            
+            # line_of_sight = line_of_sight_input()
+
+            calc = WinnerCalculator(str(def_values['measurement_name']), scenario, line_of_sight, 
                                     float(def_values['frequency']), float(def_values['distance']), 
                                     int(def_values['res_round']))
             print(calc)
