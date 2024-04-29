@@ -49,7 +49,7 @@ class WinnerCalculator():
 
 
     def calculate_winner_model(self):
-
+        print(type(self.scenario))
         if self.line_of_sight == "LOS":
 
             if self.scenario == "B1": 

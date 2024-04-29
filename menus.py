@@ -26,6 +26,11 @@ class MenuEngine:
 
         while True:
                 
+                if isinstance(self.menu_listing[self.menu_running], ConditionalInput):
+
+                    self.menu_listing[self.menu_running].line_of_sight = self.menu_listing[2].answers['line_of_sight']
+                    self.menu_listing[self.menu_running].scenario = self.menu_listing[1].answers['scenario']
+
                 choice = self.menu_listing[self.menu_running].get_input()
     
                 if choice == 'Main menu':
@@ -49,8 +54,8 @@ class MenuEngine:
 
 class DefaultValuesInput:
     
-        answers = None
         def __init__(self):
+            self.answers = None
             self.questions = [
                 inquirer.Text('measurement_name', message="Enter the name of the measurement"),
                 inquirer.Text('frequency', message="Enter the frequency (GHz)",validate=validate_number),
@@ -72,8 +77,8 @@ class DefaultValuesInput:
 
 class ScenarioInput:
 
-    answers = None
     def __init__(self):
+        self.answers = None
         self.questions = [
             inquirer.List('scenario', message="Choose a scenario", choices=['B1', 'C2', 'D1'])
         ]
@@ -82,7 +87,7 @@ class ScenarioInput:
 
         self.answers = inquirer.prompt(self.questions)
         confirm = values_confirmation(self.answers['scenario'])
-    
+        
         return confirmation_condition(confirm, self.answers['scenario'], values_list=['B1', 'C2', 'D1'])
     
     def edit_input(self):
@@ -94,8 +99,8 @@ class ScenarioInput:
 
 class LineOfSightInput:
 
-    answers = None
     def __init__(self):
+        self.answers = None
         self.questions = [
             inquirer.List('line_of_sight', message="Choose a line of sight", choices=['LOS', 'NLOS'])
         ]
@@ -112,6 +117,50 @@ class LineOfSightInput:
         confirm = values_confirmation(self.answers['line_of_sight'])
     
         return confirmation_condition(confirm, self.answers['line_of_sight'], values_list=['LOS', 'NLOS'])
+
+
+class ConditionalInput: #TODO figure out how to make this class work without given values at first
+
+    def __init__(self):
+
+        self.answers = None
+        self.line_of_sight = None
+        self.scenario = None
+
+
+    def get_input(self):
+        
+        if self.line_of_sight == "LOS":
+
+            self.questions = [
+                inquirer.Text('h_bs', message="Enter the height of the base station (m)",validate=validate_number),
+                inquirer.Text('h_ms', message="Enter the height of the mobile station (m)",validate=validate_number),
+            ]
+        
+        elif self.line_of_sight == "NLOS":
+
+            if self.scenario == "B1":
+
+                self.questions = [
+                    inquirer.Text('h_bs', message="Enter the height of the base station (m)",validate=validate_number),
+                    inquirer.Text('h_ms', message="Enter the height of the mobile station (m)",validate=validate_number),
+                    inquirer.Text('d1', message="Enter length of the street rectangular grid(m)",validate=validate_number),
+                    inquirer.Text('d2', message="Enter width of the street rectangular grid(m)",validate=validate_number),
+                    inquirer.Text('w', message="Enter total width of the street(m)",validate=validate_number),
+                ]
+            
+            else:
+
+                self.questions = [
+                    inquirer.Text('h_bs', message="Enter the height of the base station (m)",validate=validate_number),
+                    inquirer.Text('h_ms', message="Enter the height of the mobile station (m)",validate=validate_number),
+                ]
+
+        self.answers = inquirer.prompt(self.questions)
+        confirm = values_confirmation(self.answers)
+    
+        return confirmation_condition(confirm, self.answers)
+
 
 def clear_screen():
 
