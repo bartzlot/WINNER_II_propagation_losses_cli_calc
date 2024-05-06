@@ -18,16 +18,27 @@ if __name__ == "__main__":
             conditionals = ConditionalInput()
             calc_menu_engine = MenuEngine(def_values, scenario, line_of_sight, conditionals)
             
-            print(conditionals.answers)
+            
+
             if calc_menu_engine.run_menus():
                 pass
 
             else:
                 continue
-
-            calc = WinnerCalculator(str(def_values.answers['measurement_name']), scenario.answers['scenario'], 
-                                    line_of_sight.answers['line_of_sight'], float(def_values.answers['frequency']), 
-                                    float(def_values.answers['distance']), int(def_values.answers['res_round']))
+            
+            if scenario.answers['scenario'] == 'B1' and line_of_sight.answers['line_of_sight'] == 'NLOS':
+                calc = WinnerCalculator(str(def_values.answers['measurement_name']), scenario.answers['scenario'], 
+                                        line_of_sight.answers['line_of_sight'], float(def_values.answers['frequency']), 
+                                        float(def_values.answers['distance']), int(def_values.answers['res_round']), 
+                                        float(conditionals.answers['h_bs']),float(conditionals.answers['h_ms']), 
+                                        float(conditionals.answers['d1']), float(conditionals.answers['d2']), 
+                                        float(conditionals.answers['w']))
+            
+            else:
+                calc = WinnerCalculator(str(def_values.answers['measurement_name']), scenario.answers['scenario'], 
+                                        line_of_sight.answers['line_of_sight'], float(def_values.answers['frequency']), 
+                                        float(def_values.answers['distance']), int(def_values.answers['res_round']), 
+                                        float(conditionals.answers['h_bs']),float(conditionals.answers['h_ms']))
             print(calc)
             input()
 

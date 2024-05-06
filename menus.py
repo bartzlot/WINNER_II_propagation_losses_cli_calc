@@ -119,7 +119,7 @@ class LineOfSightInput:
         return confirmation_condition(confirm, self.answers['line_of_sight'], values_list=['LOS', 'NLOS'])
 
 
-class ConditionalInput: #TODO figure out how to make this class work without given values at first
+class ConditionalInput:
 
     def __init__(self):
 
@@ -311,57 +311,6 @@ def nlos_b1_input():
     return (float(answers['h_bs']), float(answers['h_ms']),
              float(answers['d1']), float(answers['d2']), 
              float(answers['w']))
-
-# def scenario_input():
-
-#     clear_screen()
-#     choices = ['B1', 'C2', 'D1']
-#     questions = [
-#         inquirer.List('scenario', message="Choose a scenario", choices=choices)
-#     ]
-#     answers = inquirer.prompt(questions)
-#     confirm = values_confirmation(answers['scenario'])
-    
-#     return confirmation_condition(confirm, answers['scenario'], values_list=choices)
-
-
-# def line_of_sight_input():
-
-#     choices = ['LOS', 'NLOS']
-#     questions = [
-#         inquirer.List('line_of_sight', message="Choose a line of sight", choices=choices)
-#     ]
-#     answers = inquirer.prompt(questions)
-#     confirm = values_confirmation(answers['line_of_sight'])
-    
-#     return confirmation_condition(confirm, answers['line_of_sight'], values_list=choices)
-
-
-
-# def default_values_input():
-
-#     questions = [
-#         inquirer.Text('measurement_name', message="Enter the name of the measurement"),
-#         inquirer.Text('frequency', message="Enter the frequency (GHz)",validate=validate_number),
-#         inquirer.Text('distance', message="Enter the distance (m)",validate=validate_number),
-#         inquirer.Text('res_round', message="Enter the number of decimal places to round the result",validate=validate_round),
-#     ]
-#     answers = inquirer.prompt(questions)
-#     confirm = values_confirmation(answers)
-
-#     return confirmation_condition(confirm, answers)
-        
-
-# def main_menu():
-
-#     clear_screen()
-#     questions = [
-#         inquirer.List('main_menu', message="WINNER II Calculator (choose an option using arrow keys)", 
-#                       choices=['Calculate Winner Model', 'Measurement sets','Exit'])
-#     ]
-#     answers = inquirer.prompt(questions)
-
-#     return answers['main_menu']
 
 
 def calculation_menu():
