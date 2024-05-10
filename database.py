@@ -30,5 +30,13 @@ class MeasurementSet():
 
         else:
             raise ValueError("Measurement not in list")
+        
+
+    def print_measurements(self):
+        
+        for measurement in self.measurements_list:
+            
+            print(measurement)
+            print("\n")
 
 

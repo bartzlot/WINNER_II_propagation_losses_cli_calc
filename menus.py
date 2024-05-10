@@ -13,6 +13,7 @@ def main_menu():
 
     return answers['main_menu']
 
+
 class MenuEngine:
 
     def __init__(self, *args):
@@ -74,6 +75,21 @@ class DefaultValuesInput:
 
             return confirmation_condition(confirm, self.answers)
         
+
+class MeasurementsSetMenu:
+
+    def __init__(self):
+
+        self.answers = None
+        self.questions = [
+            inquirer.List('measurements_set_menu', message="Choose an option", 
+                          choices=['Print measurements', 'Add measurement set', 'Delete measurement set', 'Back'])
+        ]
+
+    def get_input(self):
+        
+        self.answers = inquirer.prompt(self.questions)
+    
 
 class ScenarioInput:
 
@@ -169,6 +185,7 @@ def clear_screen():
 
     else:
         system('clear')
+
 
 def confirmation_condition(confirmation_choice, answers, values_list=None):
 
