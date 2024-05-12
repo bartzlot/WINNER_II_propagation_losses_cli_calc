@@ -1,6 +1,7 @@
 import inquirer
 import inquirer.errors
 from os import name, system
+from database import Database, MeasurementSet
 
 def main_menu():
 
@@ -26,14 +27,37 @@ class MenuEngine:
         self.menu_running = 0
 
         while True:
-                
+                clear_screen()
+
                 if isinstance(self.menu_listing[self.menu_running], ConditionalInput):
 
                     self.menu_listing[self.menu_running].line_of_sight = self.menu_listing[2].answers['line_of_sight']
                     self.menu_listing[self.menu_running].scenario = self.menu_listing[1].answers['scenario']
 
                 choice = self.menu_listing[self.menu_running].get_input()
-    
+
+                if isinstance(self.menu_listing[self.menu_running], MeasurementsSetMenu):
+
+                    if choice == 'Add measurement set':
+
+                        measurement_set = MeasurementSet(measurement_set_input())
+                        self.menu_listing[self.menu_running].measurements_set_database.add_measurement_set(measurement_set)
+                        continue
+
+                    elif choice == 'Delete measurement set':
+                        
+                        measurement_sets_list = self.menu_listing[self.menu_running].measurements_set_database.measurements_sets_list
+
+                        if not measurement_sets_list:
+                            custom_error_message("There is no measurement set to delete. Press Enter to continue")
+                            continue
+                        
+                        measurement_chosen_list = self.menu_listing[self.menu_running].choose_measurement_set(measurement_sets_list)
+                        self.menu_listing[self.menu_running].measurements_set_database.delete_measurement_set(measurement_chosen_list)
+                        continue
+
+
+
                 if choice == 'Main menu':
                     return False
     
@@ -78,18 +102,83 @@ class DefaultValuesInput:
 
 class MeasurementsSetMenu:
 
-    def __init__(self):
 
+    def __init__(self, measurements_set_database: object):
+
+        self.measurements_set_database = measurements_set_database
         self.answers = None
         self.questions = [
             inquirer.List('measurements_set_menu', message="Choose an option", 
-                          choices=['Print measurements', 'Add measurement set', 'Delete measurement set', 'Back'])
+                          choices=['View measurement set', 'Add measurement set', 'Delete measurement set', 'Back', 'Main menu'])
         ]
+
 
     def get_input(self):
         
+        self.measurements_set_database.print_measurements_sets()
         self.answers = inquirer.prompt(self.questions)
+
+        return self.answers['measurements_set_menu']
     
+
+    def choose_measurement_set(self, measurement_sets_list: list):
+
+        clear_screen()
+        questions = [
+            inquirer.Checkbox('measurements_set', message="Choose a measurement set", choices=measurement_sets_list)
+        ]
+        answers = inquirer.prompt(questions)
+
+        return answers['measurements_set']
+    
+
+    def choose_view_measurement_set(self, measurement_sets_list: list):
+
+        clear_screen()
+        questions = [
+            inquirer.List('measurements_set', message="Choose a measurement set", choices=measurement_sets_list)
+        ]
+        answers = inquirer.prompt(questions)
+
+        return answers['measurements_set']
+    
+
+class MeasurementsViewMenu:
+
+
+    def __init__(self):
+        
+        self.measurement_set_instance = None
+        self.answers = None
+        self.questions = [
+            inquirer.List('measurements_view_menu', message="Choose an option", 
+                          choices=['Delete measurement', 'Back', 'Main menu'])
+        ]
+
+
+    def get_input(self, measurement_set_instance: object):
+
+        self.measurement_set_instance = measurement_set_instance
+        self.measurement_set_instance.print_measurements()
+        self.answers = inquirer.prompt(self.questions)
+
+        return self.answers['measurements_view_menu']
+
+
+    def choose_measurement(self, measurements_list: list):
+
+        clear_screen()
+        questions = [
+            inquirer.Checkbox('measurements', message="Choose a measurements", choices=measurements_list)
+        ]
+        answers = inquirer.prompt(questions)
+
+        self.measurement_set_instance.delete_measurement(answers['measurements'])
+    
+
+    def add_measurement(self, measurement):
+
+        self.measurement_set_instance.add_measurement(measurement)
 
 class ScenarioInput:
 
@@ -176,6 +265,25 @@ class ConditionalInput:
         confirm = values_confirmation(self.answers)
     
         return confirmation_condition(confirm, self.answers)
+
+
+def measurement_set_input():
+    
+    questions = [
+        inquirer.Text('measurement_set_name', message="Enter the name of the measurement set", validate=validate_name)
+    ]
+    asnwer = inquirer.prompt(questions)
+
+    return asnwer['measurement_set_name']
+
+
+def custom_error_message(message: str):
+
+    clear_screen()
+    questions = [
+        inquirer.Text('error', message=message)
+    ]
+    inquirer.prompt(questions)
 
 
 def clear_screen():
@@ -270,6 +378,7 @@ def list_input_edit(values):
 
 
 def validate_number(value, answers_dict):
+
     clear_screen()
     try:
 
@@ -295,6 +404,14 @@ def validate_round(value, answers_dict):
     
     except ValueError:
         raise inquirer.errors.ValidationError(reason="Please enter an integer number", value=answers_dict)
+    
+
+def validate_name(value, answer):
+
+    if value == "":
+        raise inquirer.errors.ValidationError(reason="Name cannot be empty", value=value)
+    
+    return True
 
 
 def height_of_stations_input():

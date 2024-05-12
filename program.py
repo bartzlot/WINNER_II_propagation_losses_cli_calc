@@ -1,11 +1,15 @@
 from menus import (main_menu, calculation_menu, 
                     ScenarioInput, DefaultValuesInput,
                     LineOfSightInput, MenuEngine,
-                    ConditionalInput)
+                    ConditionalInput, MeasurementsSetMenu,
+                    MeasurementsViewMenu)
 from calculations import WinnerCalculator
+from database import Database, MeasurementSet
 
 if __name__ == "__main__":
-    
+
+    database = Database()
+
     while True:
 
         choice = main_menu()
@@ -43,7 +47,11 @@ if __name__ == "__main__":
             input()
 
         elif choice == "Measurement sets":
-            pass
+
+            measurements_set_menu = MeasurementsSetMenu(database)
+            measurements_view_menu = MeasurementsViewMenu()
+            measurements_menu_engine = MenuEngine(measurements_set_menu, measurements_view_menu)
+            measurements_menu_engine.run_menus()
 
         elif choice == "Exit":
             break
