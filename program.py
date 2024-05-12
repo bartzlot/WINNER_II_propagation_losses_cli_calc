@@ -2,7 +2,7 @@ from menus import (main_menu, calculation_menu,
                     ScenarioInput, DefaultValuesInput,
                     LineOfSightInput, MenuEngine,
                     ConditionalInput, MeasurementsSetMenu,
-                    MeasurementsViewMenu)
+                    MeasurementsViewMenu, SaveResultsMenu, clear_screen)
 from calculations import WinnerCalculator
 from database import Database, MeasurementSet
 
@@ -20,6 +20,7 @@ if __name__ == "__main__":
             scenario = ScenarioInput()
             line_of_sight = LineOfSightInput()
             conditionals = ConditionalInput()
+            save_results = SaveResultsMenu()
             calc_menu_engine = MenuEngine(def_values, scenario, line_of_sight, conditionals)
             
             
@@ -43,8 +44,20 @@ if __name__ == "__main__":
                                         line_of_sight.answers['line_of_sight'], float(def_values.answers['frequency']), 
                                         float(def_values.answers['distance']), int(def_values.answers['res_round']), 
                                         float(conditionals.answers['h_bs']),float(conditionals.answers['h_ms']))
+            clear_screen()
             print(calc)
-            input()
+            
+            choice = save_results.get_input()
+
+            if choice == 'Save results':
+                
+                chosen_measurement_sets = save_results.choose_measurement_set(database.measurements_sets_list)
+                for measurement_set in chosen_measurement_sets:
+
+                    measurement_set.add_measurement(calc)
+
+            else:
+                pass
 
         elif choice == "Measurement sets":
 

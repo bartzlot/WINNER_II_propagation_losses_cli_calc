@@ -11,7 +11,6 @@ class Database():
 
         for index, measurement_set in enumerate(self.measurements_sets_list):
             print(f'{index+1}. {measurement_set.measurements_name}')
-            print("\n")
 
     
     def add_measurement_set(self, measurement_set):
@@ -81,9 +80,12 @@ class MeasurementSet():
 
     def print_measurements(self):
         
+        headers = ["Number", "Calculation name", "Scenario", "Line of sight", "Frequency", "Distance", 
+                "Heigth of Base Station", "Heigth of Media Station", "Length of Grid(d1)", 
+                "Width of Grid(d2)", "Street Width(w)", "Result"]
+        print(' | '.join(f"{h:<{len(h)}}" for h in headers))
         for index, measurement in enumerate(self.measurements_list):
             
-            print(f'{index}. {measurement}')
-            print("\n")
+            print(f"{index+1:<{len(headers[0])}} | {measurement.print_in_list()}")
 
 

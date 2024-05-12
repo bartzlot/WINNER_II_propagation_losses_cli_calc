@@ -70,10 +70,32 @@ class WinnerCalculator():
 
 
     def __str__(self):
+
+        headers = ["Calculation name", "Scenario", "Line of sight", "Frequency", "Distance", 
+                "Heigth of Base Station", "Heigth of Media Station", "Length of Grid(d1)", "Width of Grid(d2)", "Street Width(w)", "Result"]
+        values = [self.measurement_name, self.scenario, self.line_of_sight, 
+                f"{self.frequency} GHz", f"{self.distance} m", f"{self.h_bs} m", 
+                f"{self.h_ms} m", f"{self.d1} m", f"{self.d2} m", f"{self.w} m", 
+                f"{self.result} dB"]
         
-        return (f"{self.measurement_name} | {self.scenario} | {self.line_of_sight} | "
-                f"{self.frequency} GHz | {self.distance} m | {self.h_bs} m | {self.h_ms} m | "
-                f"{self.d1} m | {self.d2} m | {self.w} m |{self.result} dB")
+        header_line = ' | '.join(f"{h:<{len(h)}}" for h in headers)
+        value_line = ' | '.join(f"{v:<{len(h)}}" for v, h in zip(values, headers))
+
+        return f"{header_line}\n\n{value_line}"
+    
+    def print_in_list(self):
+
+        headers = ["Calculation name", "Scenario", "Line of sight", "Frequency", "Distance", 
+                "Heigth of Base Station", "Heigth of Media Station", "Length of Grid(d1)", "Width of Grid(d2)", "Street Width(w)", "Result"]
+        values = [self.measurement_name, self.scenario, self.line_of_sight, 
+                f"{self.frequency} GHz", f"{self.distance} m", f"{self.h_bs} m", 
+                f"{self.h_ms} m", f"{self.d1} m", f"{self.d2} m", f"{self.w} m", 
+                f"{self.result} dB"]
+        
+        header_line = ' | '.join(f"{h:<{len(h)}}" for h in headers)
+        value_line = ' | '.join(f"{v:<{len(h)}}" for v, h in zip(values, headers))
+
+        return f"{value_line}"
 
 
 

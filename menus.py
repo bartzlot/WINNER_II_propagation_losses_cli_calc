@@ -55,8 +55,17 @@ class MenuEngine:
                         measurement_chosen_list = self.menu_listing[self.menu_running].choose_measurement_set(measurement_sets_list)
                         self.menu_listing[self.menu_running].measurements_set_database.delete_measurement_set(measurement_chosen_list)
                         continue
+                    
+                    elif choice == 'View measurement set':
 
+                        measurement_sets_list = self.menu_listing[self.menu_running].measurements_set_database.measurements_sets_list
 
+                        if not measurement_sets_list:
+                            custom_error_message("There is no measurement set to view. Press Enter to continue")
+                            continue
+                                
+                        measurement_chosen = self.menu_listing[self.menu_running].choose_view_measurement_set(measurement_sets_list)
+                        measurement_chosen = self.menu_listing[self.menu_running + 1].measurement_set_instance = measurement_chosen
 
                 if choice == 'Main menu':
                     return False
@@ -82,7 +91,7 @@ class DefaultValuesInput:
         def __init__(self):
             self.answers = None
             self.questions = [
-                inquirer.Text('measurement_name', message="Enter the name of the measurement"),
+                inquirer.Text('measurement_name', message="Enter the name of the measurement", validate=validate_name),
                 inquirer.Text('frequency', message="Enter the frequency (GHz)",validate=validate_number),
                 inquirer.Text('distance', message="Enter the distance (m)",validate=validate_number),
                 inquirer.Text('res_round', message="Enter the number of decimal places to round the result",validate=validate_round),
@@ -156,9 +165,8 @@ class MeasurementsViewMenu:
         ]
 
 
-    def get_input(self, measurement_set_instance: object):
+    def get_input(self):
 
-        self.measurement_set_instance = measurement_set_instance
         self.measurement_set_instance.print_measurements()
         self.answers = inquirer.prompt(self.questions)
 
@@ -174,11 +182,7 @@ class MeasurementsViewMenu:
         answers = inquirer.prompt(questions)
 
         self.measurement_set_instance.delete_measurement(answers['measurements'])
-    
 
-    def add_measurement(self, measurement):
-
-        self.measurement_set_instance.add_measurement(measurement)
 
 class ScenarioInput:
 
@@ -265,6 +269,32 @@ class ConditionalInput:
         confirm = values_confirmation(self.answers)
     
         return confirmation_condition(confirm, self.answers)
+
+
+class SaveResultsMenu:
+
+    def __init__(self):
+
+        self.answers = None
+        self.questions = [
+            inquirer.List('save_results_menu', message="Choose an option", choices=['Save results', 'Do not save results'])
+        ]
+
+
+    def get_input(self):
+
+        self.answers = inquirer.prompt(self.questions)
+        return self.answers['save_results_menu']
+
+
+    def choose_measurement_set(self, measurements_sets_list: list):
+
+        questions = [
+            inquirer.Checkbox('measurements_set', message="Choose a measurement set", choices=measurements_sets_list)
+        ]
+        answers = inquirer.prompt(questions)
+
+        return answers['measurements_set']
 
 
 def measurement_set_input():
@@ -408,8 +438,8 @@ def validate_round(value, answers_dict):
 
 def validate_name(value, answer):
 
-    if value == "":
-        raise inquirer.errors.ValidationError(reason="Name cannot be empty", value=value)
+    if not answer:
+        raise inquirer.errors.ValidationError(reason="Name cannot be empty", value=answer)
     
     return True
 
