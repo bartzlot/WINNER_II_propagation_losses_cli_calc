@@ -56,7 +56,7 @@ class MenuEngine:
                         self.menu_listing[self.menu_running].measurements_set_database.delete_measurement_set(measurement_chosen_list)
                         continue
                     
-                    elif choice == 'View measurement set':
+                    elif choice == 'View measurement set': #TODO view measurement set 
 
                         measurement_sets_list = self.menu_listing[self.menu_running].measurements_set_database.measurements_sets_list
 
@@ -65,7 +65,7 @@ class MenuEngine:
                             continue
                                 
                         measurement_chosen = self.menu_listing[self.menu_running].choose_view_measurement_set(measurement_sets_list)
-                        measurement_chosen = self.menu_listing[self.menu_running + 1].measurement_set_instance = measurement_chosen
+                        self.menu_listing[self.menu_running + 1].measurement_set_instance = measurement_chosen
 
                 if choice == 'Main menu':
                     return False
@@ -152,7 +152,7 @@ class MeasurementsSetMenu:
         return answers['measurements_set']
     
 
-class MeasurementsViewMenu:
+class MeasurementsViewMenu: #TODO print measurements function
 
 
     def __init__(self):

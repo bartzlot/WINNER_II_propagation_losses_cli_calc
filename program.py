@@ -52,6 +52,7 @@ if __name__ == "__main__":
             if choice == 'Save results':
                 
                 chosen_measurement_sets = save_results.choose_measurement_set(database.measurements_sets_list)
+
                 for measurement_set in chosen_measurement_sets:
 
                     measurement_set.add_measurement(calc)

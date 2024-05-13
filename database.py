@@ -35,9 +35,6 @@ class Database():
 
 class MeasurementSet():
 
-    measurements_list = []
-    measurements_name = ""
-
 
     def __init__(self, measurements_set_name: str):
             
@@ -45,6 +42,7 @@ class MeasurementSet():
             raise ValueError("Measurement set name must be a string")
 
         self.measurements_name = measurements_set_name
+        self.measurements_list = []
 
 
     def __str__(self):
