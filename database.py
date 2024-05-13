@@ -1,4 +1,3 @@
-# from calculations import WinnerCalculator
 import inquirer
 import inquirer.errors
 
@@ -58,11 +57,6 @@ class MeasurementSet():
 
 
         self.measurements_list.append(measurement)
-        # if isinstance(measurement, WinnerCalculator):
-        #     self.measurements_list.append(measurement)
-
-        # else:
-        #     raise ValueError("Measurement must be an instance of WinnerCalculator")
 
 
     def delete_measurement(self, measurements: list):

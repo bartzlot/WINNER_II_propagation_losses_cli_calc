@@ -68,7 +68,6 @@ class WinnerCalculator():
             raise ValueError("Missing input values")
 
 
-
     def __str__(self):
 
         headers = ["Calculation name", "Scenario", "Line of sight", "Frequency", "Distance", 
@@ -82,7 +81,7 @@ class WinnerCalculator():
         value_line = ' | '.join(f"{v:<{len(h)}}" for v, h in zip(values, headers))
 
         return f"{header_line}\n\n{value_line}"
-    
+     
     def print_in_list(self):
 
         headers = ["Calculation name", "Scenario", "Line of sight", "Frequency", "Distance", 
@@ -96,6 +95,8 @@ class WinnerCalculator():
         value_line = ' | '.join(f"{v:<{len(h)}}" for v, h in zip(values, headers))
 
         return f"{value_line}"
+    
+
 
 
 

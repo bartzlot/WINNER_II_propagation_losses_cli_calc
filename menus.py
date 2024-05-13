@@ -56,7 +56,7 @@ class MenuEngine:
                         self.menu_listing[self.menu_running].measurements_set_database.delete_measurement_set(measurement_chosen_list)
                         continue
                     
-                    elif choice == 'View measurement set': #TODO view measurement set 
+                    elif choice == 'View measurement set':
 
                         measurement_sets_list = self.menu_listing[self.menu_running].measurements_set_database.measurements_sets_list
 
@@ -66,6 +66,20 @@ class MenuEngine:
                                 
                         measurement_chosen = self.menu_listing[self.menu_running].choose_view_measurement_set(measurement_sets_list)
                         self.menu_listing[self.menu_running + 1].measurement_set_instance = measurement_chosen
+
+                if isinstance(self.menu_listing[self.menu_running], MeasurementsViewMenu):
+
+                    if choice == 'Delete measurement':
+
+                        measurements_list = self.menu_listing[self.menu_running].measurement_set_instance.measurements_list
+
+                        if not measurements_list:
+                            custom_error_message("There is no measurement to delete. Press Enter to continue")
+                            continue
+
+                        measurement_chosen_list = self.menu_listing[self.menu_running].choose_measurement(measurements_list)
+                        # self.menu_listing[self.menu_running].measurement_set_instance.delete_measurement(measurement_chosen_list)
+                        continue
 
                 if choice == 'Main menu':
                     return False
@@ -176,12 +190,13 @@ class MeasurementsViewMenu: #TODO print measurements function
     def choose_measurement(self, measurements_list: list):
 
         clear_screen()
+        measurements_dict = {measurement.print_in_list(): measurement for measurement in measurements_list}
         questions = [
-            inquirer.Checkbox('measurements', message="Choose a measurements", choices=measurements_list)
+            inquirer.Checkbox('measurements', message="Choose a measurements", choices=list(measurements_dict.keys()))
         ]
         answers = inquirer.prompt(questions)
 
-        self.measurement_set_instance.delete_measurement(answers['measurements'])
+        self.measurement_set_instance.delete_measurement(measurements_dict[key] for key in answers['measurements'])
 
 
 class ScenarioInput:
