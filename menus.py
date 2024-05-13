@@ -78,7 +78,6 @@ class MenuEngine:
                             continue
 
                         measurement_chosen_list = self.menu_listing[self.menu_running].choose_measurement(measurements_list)
-                        # self.menu_listing[self.menu_running].measurement_set_instance.delete_measurement(measurement_chosen_list)
                         continue
 
                 if choice == 'Main menu':

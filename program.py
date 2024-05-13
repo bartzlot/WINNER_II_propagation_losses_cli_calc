@@ -5,10 +5,12 @@ from menus import (main_menu, calculation_menu,
                     MeasurementsViewMenu, SaveResultsMenu, clear_screen)
 from calculations import WinnerCalculator
 from database import Database, MeasurementSet
+import pickle
 
 if __name__ == "__main__":
 
-    database = Database()
+    # database = Database()
+    database = Database.load_database('database.obj')
 
     while True:
 
@@ -68,4 +70,6 @@ if __name__ == "__main__":
             measurements_menu_engine.run_menus()
 
         elif choice == "Exit":
+
+            database.save_database('database.obj')
             break

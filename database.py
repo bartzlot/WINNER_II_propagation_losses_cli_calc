@@ -1,10 +1,24 @@
-import inquirer
-import inquirer.errors
+import pickle
 
 class Database():
 
-    measurements_sets_list = []
+    def __init__(self):
+        self.measurements_sets_list = []
 
+
+    def save_database(self, file_name: str):
+
+        with open(file_name, 'wb') as file:
+            pickle.dump(self, file)
+        file.close()
+
+
+    @staticmethod
+    def load_database(file_name: str):
+
+        with open(file_name, 'rb') as file:
+            return pickle.load(file)
+        
 
     def print_measurements_sets(self):
 
@@ -30,7 +44,7 @@ class Database():
 
             else:
                 raise ValueError("Measurement set not in list")
-
+        
 
 class MeasurementSet():
 
@@ -48,13 +62,7 @@ class MeasurementSet():
         return f"{self.measurements_name}"
         
 
-    def get_measuremenmts_from_file(self, file_name: str): #TODO
-
-        pass
-
-
     def add_measurement(self, measurement):
-
 
         self.measurements_list.append(measurement)
 
