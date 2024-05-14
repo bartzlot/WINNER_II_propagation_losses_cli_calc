@@ -1,18 +1,21 @@
 import inquirer
 import inquirer.errors
 from os import name, system
-from database import Database, MeasurementSet
+from os.path import realpath
+from database import MeasurementSet
+
 
 def main_menu():
 
     clear_screen()
     questions = [
         inquirer.List('main_menu', message="WINNER II Calculator (choose an option using arrow keys)", 
-                      choices=['Calculate Winner Model', 'Measurement sets','Exit'])
+                      choices=['Calculate Winner Model', 'Measurement sets', 'Database options', 'Exit'])
     ]
     answers = inquirer.prompt(questions)
 
     return answers['main_menu']
+
 
 
 class MenuEngine:
@@ -27,6 +30,7 @@ class MenuEngine:
         self.menu_running = 0
 
         while True:
+                
                 clear_screen()
 
                 if isinstance(self.menu_listing[self.menu_running], ConditionalInput):
@@ -98,6 +102,38 @@ class MenuEngine:
 
         return True
 
+
+class DatabaseOptionsMenu:
+
+
+    def __init__(self, current_database_path: str):
+
+        self.database_path = current_database_path
+        self.answers = None
+        self.questions = [
+            inquirer.List('database_options', message="Choose an option", 
+                          choices=['Edit database path', 'Back'])
+        ]
+
+
+    def get_input(self):
+
+        print(f"Current database path: {realpath(self.database_path)}")
+        self.answers = inquirer.prompt(self.questions)
+        return self.answers['database_options']
+
+
+    def new_path_input(self):
+
+        clear_screen()
+        questions = [
+            inquirer.Text('new_path', message="Enter the new path to the database", validate=validate_path)
+        ]
+        answers = inquirer.prompt(questions)
+        self.database_path = answers['new_path']
+
+        return answers['new_path']
+    
 
 class DefaultValuesInput:
     
@@ -419,6 +455,24 @@ def list_input_edit(values):
 
     return answers['values']
     
+
+def validate_path(value, answers_dict):
+
+    clear_screen()
+
+    if not answers_dict:
+        raise inquirer.errors.ValidationError(reason="Path cannot be empty", value=answers_dict)
+    
+    if not answers_dict.endswith('.obj'):
+        raise inquirer.errors.ValidationError(reason="Path must end with .obj", value=answers_dict)
+    
+    try:
+        open(answers_dict, 'a').close()
+
+    except:
+        raise inquirer.errors.ValidationError(reason="Path is not valid", value=answers_dict)
+    
+    return True
 
 
 def validate_number(value, answers_dict):

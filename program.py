@@ -1,16 +1,24 @@
-from menus import (main_menu, calculation_menu, 
-                    ScenarioInput, DefaultValuesInput,
+from menus import (main_menu,ScenarioInput, DefaultValuesInput,
                     LineOfSightInput, MenuEngine,
                     ConditionalInput, MeasurementsSetMenu,
-                    MeasurementsViewMenu, SaveResultsMenu, clear_screen)
+                    MeasurementsViewMenu, SaveResultsMenu, 
+                    clear_screen, DatabaseOptionsMenu)
 from calculations import WinnerCalculator
-from database import Database, MeasurementSet
-import pickle
+from database import Database
+from os.path import exists
 
 if __name__ == "__main__":
 
-    # database = Database()
-    database = Database.load_database('database.obj')
+
+    database_path = Database.load_database_path()
+
+    if exists(database_path):
+
+        database = Database.load_database(database_path)
+        database.database_path = database_path
+
+    else:
+        database = Database()
 
     while True:
 
@@ -69,7 +77,17 @@ if __name__ == "__main__":
             measurements_menu_engine = MenuEngine(measurements_set_menu, measurements_view_menu)
             measurements_menu_engine.run_menus()
 
+        elif choice == "Database options":
+
+            database_menu = DatabaseOptionsMenu(database.database_path)
+            ans = database_menu.get_input()
+
+            if ans == "Edit database path":
+
+                new_path = database_menu.new_path_input()
+                database.change_database_path(new_path)
+
         elif choice == "Exit":
 
-            database.save_database('database.obj')
+            database.save_database()
             break

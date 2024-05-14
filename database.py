@@ -1,14 +1,23 @@
 import pickle
+from dotenv import load_dotenv, set_key
+import os
+
 
 class Database():
 
     def __init__(self):
         self.measurements_sets_list = []
+        self.database_path = ""
 
 
-    def save_database(self, file_name: str):
+    def save_database(self):
 
-        with open(file_name, 'wb') as file:
+        if self.database_path == "":
+            self.database_path = 'database.obj'
+            set_key('.env', 'DATABASE_PATH', self.database_path)
+            print(self.database_path)
+
+        with open(self.database_path, 'wb') as file:
             pickle.dump(self, file)
         file.close()
 
@@ -18,14 +27,31 @@ class Database():
 
         with open(file_name, 'rb') as file:
             return pickle.load(file)
+
+    @staticmethod
+    def load_database_path():
+
+        load_dotenv('.env')
+        try:
+
+            return os.getenv('DATABASE_PATH')
         
+        except:
+            raise ValueError(".env file not found in program directory")
+
+
+    def change_database_path(self, new_path: str):
+
+        self.database_path = new_path
+        set_key('.env', 'DATABASE_PATH', new_path)
+
 
     def print_measurements_sets(self):
 
         for index, measurement_set in enumerate(self.measurements_sets_list):
             print(f'{index+1}. {measurement_set.measurements_name}')
 
-    
+
     def add_measurement_set(self, measurement_set):
 
         if isinstance(measurement_set, MeasurementSet):
@@ -33,7 +59,7 @@ class Database():
 
         else:
             raise ValueError("Measurement set must be an instance of MeasurementSet")
-        
+
     
     def delete_measurement_set(self, measurement_sets: list):
 

@@ -1,8 +1,5 @@
 import math
 
-from menus import (height_of_stations_input, 
-                    nlos_b1_input)
-
 
 class WinnerCalculator():
 
