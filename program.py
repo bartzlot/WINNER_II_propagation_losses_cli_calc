@@ -20,6 +20,8 @@ if __name__ == "__main__":
     else:
         database = Database()
 
+    measurements_set_menu = MeasurementsSetMenu(database)
+
     while True:
 
         choice = main_menu()
@@ -72,10 +74,10 @@ if __name__ == "__main__":
 
         elif choice == "Measurement sets":
 
-            measurements_set_menu = MeasurementsSetMenu(database)
             measurements_view_menu = MeasurementsViewMenu()
             measurements_menu_engine = MenuEngine(measurements_set_menu, measurements_view_menu)
             measurements_menu_engine.run_menus()
+            database.save_database()
 
         elif choice == "Database options":
 
@@ -86,6 +88,14 @@ if __name__ == "__main__":
 
                 new_path = database_menu.new_path_input()
                 database.change_database_path(new_path)
+            
+            elif ans == "Create new database":
+
+                new_path = database_menu.new_path_input()
+                database.save_database()
+                database = Database()
+                database.change_database_path(new_path)
+                measurements_set_menu.measurements_set_database(database)
 
         elif choice == "Exit":
 

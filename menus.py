@@ -17,7 +17,6 @@ def main_menu():
     return answers['main_menu']
 
 
-
 class MenuEngine:
 
     def __init__(self, *args):
@@ -46,6 +45,7 @@ class MenuEngine:
 
                         measurement_set = MeasurementSet(measurement_set_input())
                         self.menu_listing[self.menu_running].measurements_set_database.add_measurement_set(measurement_set)
+                        self.menu_listing[self.menu_running].measurements_set_database.save_database()
                         continue
 
                     elif choice == 'Delete measurement set':
@@ -58,6 +58,7 @@ class MenuEngine:
                         
                         measurement_chosen_list = self.menu_listing[self.menu_running].choose_measurement_set(measurement_sets_list)
                         self.menu_listing[self.menu_running].measurements_set_database.delete_measurement_set(measurement_chosen_list)
+                        self.menu_listing[self.menu_running].measurements_set_database.save_database()
                         continue
                     
                     elif choice == 'View measurement set':
@@ -112,7 +113,7 @@ class DatabaseOptionsMenu:
         self.answers = None
         self.questions = [
             inquirer.List('database_options', message="Choose an option", 
-                          choices=['Edit database path', 'Back'])
+                          choices=['Edit database path', 'Create new database','Back'])
         ]
 
 
@@ -179,6 +180,10 @@ class MeasurementsSetMenu:
         return self.answers['measurements_set_menu']
     
 
+    def update_database(self, new_database_obj: object):
+        self.measurements_set_database = new_database_obj
+
+
     def choose_measurement_set(self, measurement_sets_list: list):
 
         clear_screen()
@@ -201,7 +206,7 @@ class MeasurementsSetMenu:
         return answers['measurements_set']
     
 
-class MeasurementsViewMenu: #TODO print measurements function
+class MeasurementsViewMenu:
 
 
     def __init__(self):
