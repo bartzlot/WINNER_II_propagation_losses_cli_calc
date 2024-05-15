@@ -15,7 +15,6 @@ class Database():
         if self.database_path == "":
             self.database_path = 'database.obj'
             set_key('.env', 'DATABASE_PATH', self.database_path)
-            print(self.database_path)
 
         with open(self.database_path, 'wb') as file:
             pickle.dump(self, file)
@@ -38,6 +37,37 @@ class Database():
         
         except:
             raise ValueError(".env file not found in program directory")
+
+    @staticmethod
+    def switch_database(existing_database_path: str):
+
+        try:
+
+            with open(existing_database_path, 'rb') as file:
+                existing_database = pickle.load(file)
+            file.close()
+        
+        except:
+            input("File, not found, creating new database, press enter to continue:")
+            return Database()
+
+        if isinstance(existing_database, Database):
+            return existing_database
+        
+        else:
+            input("Existing database is not an instance of Database, creating new database, press enter to continue:")
+            return Database()
+
+
+
+    def delete_database(self):
+            
+            if os.path.exists(self.database_path):
+                os.remove(self.database_path)
+                self.database_path = ""
+                set_key('.env', 'DATABASE_PATH', "")
+            else:
+                pass
 
 
     def change_database_path(self, new_path: str):

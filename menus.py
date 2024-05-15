@@ -113,13 +113,13 @@ class DatabaseOptionsMenu:
         self.answers = None
         self.questions = [
             inquirer.List('database_options', message="Choose an option", 
-                          choices=['Edit database path', 'Create new database','Back'])
+                          choices=['Switch Database', 'Edit database path', 'Create new database','Back'])
         ]
 
 
     def get_input(self):
 
-        print(f"Current database path: {realpath(self.database_path)}")
+        print(f"Current database path: {(self.database_path)}")
         self.answers = inquirer.prompt(self.questions)
         return self.answers['database_options']
 

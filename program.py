@@ -34,8 +34,6 @@ if __name__ == "__main__":
             conditionals = ConditionalInput()
             save_results = SaveResultsMenu()
             calc_menu_engine = MenuEngine(def_values, scenario, line_of_sight, conditionals)
-            
-            
 
             if calc_menu_engine.run_menus():
                 pass
@@ -87,7 +85,9 @@ if __name__ == "__main__":
             if ans == "Edit database path":
 
                 new_path = database_menu.new_path_input()
+                database.delete_database()
                 database.change_database_path(new_path)
+                database.save_database()
             
             elif ans == "Create new database":
 
@@ -95,7 +95,15 @@ if __name__ == "__main__":
                 database.save_database()
                 database = Database()
                 database.change_database_path(new_path)
-                measurements_set_menu.measurements_set_database(database)
+                measurements_set_menu.update_database(database)
+            
+            elif ans == 'Switch Database':
+
+                new_path = database_menu.new_path_input()
+                database.save_database()
+                database = Database.switch_database(new_path)
+                database.change_database_path(new_path)
+                measurements_set_menu.update_database(database)
 
         elif choice == "Exit":
 
