@@ -93,8 +93,15 @@ class WinnerCalculator():
 
         return f"{value_line}"
     
+    
+    def export_to_list(self):
 
-
+        values = [self.measurement_name, self.scenario, self.line_of_sight, 
+                self.frequency, self.distance, self.h_bs, 
+                self.h_ms, self.d1, self.d2, self.w, 
+                self.result]
+        
+        return values
 
 
     def calculate_winner_model(self):

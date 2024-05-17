@@ -60,7 +60,22 @@ class MenuEngine: #TODO export to csv option
                         self.menu_listing[self.menu_running].measurements_set_database.delete_measurement_set(measurement_chosen_list)
                         self.menu_listing[self.menu_running].measurements_set_database.save_database()
                         continue
-                    
+
+                    elif choice == 'Export to .csv':
+
+                        measurement_sets_list = self.menu_listing[self.menu_running].measurements_set_database.measurements_sets_list
+
+                        if not measurement_sets_list:
+                            custom_error_message("There is no measurement set to export. Press Enter to continue")
+                            continue
+
+                        measurement_chosen_list = self.menu_listing[self.menu_running].choose_measurement_set(measurement_sets_list)
+
+                        for measurement_set in measurement_chosen_list:
+                            measurement_set.export_to_csv()
+                        
+                        continue
+
                     elif choice == 'View measurement set':
 
                         measurement_sets_list = self.menu_listing[self.menu_running].measurements_set_database.measurements_sets_list

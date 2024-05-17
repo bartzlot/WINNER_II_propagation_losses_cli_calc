@@ -1,7 +1,7 @@
 import pickle
 from dotenv import load_dotenv, set_key
 import os
-
+import csv
 
 class Database():
 
@@ -32,7 +32,7 @@ class Database():
 
         dotenv_path = os.path.join(os.path.dirname(__file__), '.env')
         load_dotenv(dotenv_path, override=True)
-        
+
         try:
 
             return os.getenv('DATABASE_PATH')
@@ -147,3 +147,18 @@ class MeasurementSet():
             print(f"{index+1:<{len(headers[0])}} | {measurement.print_in_list()}")
 
 
+    def export_to_csv(self, ):
+
+        line_data = []
+        headers = ["Calculation name", "Scenario", "Line of sight", "Frequency", "Distance", 
+                "Heigth of Base Station", "Heigth of Media Station", "Length of Grid(d1)", 
+                "Width of Grid(d2)", "Street Width(w)", "Result"]
+        
+        line_data.append(headers)
+
+        for measurement in self.measurements_list:
+            line_data.append(measurement.export_to_list())
+
+        with open(f"{self.measurements_name}.csv", 'w', newline='') as file:
+            writer = csv.writer(file)
+            writer.writerows(line_data)
