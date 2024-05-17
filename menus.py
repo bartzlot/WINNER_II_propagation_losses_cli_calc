@@ -17,7 +17,7 @@ def main_menu():
     return answers['main_menu']
 
 
-class MenuEngine:
+class MenuEngine: #TODO export to csv option
 
     def __init__(self, *args):
         
@@ -168,7 +168,7 @@ class MeasurementsSetMenu:
         self.answers = None
         self.questions = [
             inquirer.List('measurements_set_menu', message="Choose an option", 
-                          choices=['View measurement set', 'Add measurement set', 'Delete measurement set', 'Back', 'Main menu'])
+                          choices=['View measurement set', 'Add measurement set', 'Delete measurement set', 'Export to .csv', 'Back', 'Main menu'])
         ]
 
 

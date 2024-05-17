@@ -2,10 +2,13 @@ from menus import (main_menu,ScenarioInput, DefaultValuesInput,
                     LineOfSightInput, MenuEngine,
                     ConditionalInput, MeasurementsSetMenu,
                     MeasurementsViewMenu, SaveResultsMenu, 
-                    clear_screen, DatabaseOptionsMenu)
+                    clear_screen, DatabaseOptionsMenu, 
+                    measurement_set_input)
 from calculations import WinnerCalculator
-from database import Database
+from database import Database, MeasurementSet
 from os.path import exists
+import os
+
 
 if __name__ == "__main__":
 
@@ -61,6 +64,11 @@ if __name__ == "__main__":
 
             if choice == 'Save results':
                 
+                if not database.measurements_sets_list:
+
+                    measurement_set = MeasurementSet(measurement_set_input())
+                    database.add_measurement_set(measurement_set)
+
                 chosen_measurement_sets = save_results.choose_measurement_set(database.measurements_sets_list)
 
                 for measurement_set in chosen_measurement_sets:

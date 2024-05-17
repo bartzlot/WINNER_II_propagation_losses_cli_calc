@@ -30,7 +30,9 @@ class Database():
     @staticmethod
     def load_database_path():
 
-        load_dotenv('.env')
+        dotenv_path = os.path.join(os.path.dirname(__file__), '.env')
+        load_dotenv(dotenv_path, override=True)
+        
         try:
 
             return os.getenv('DATABASE_PATH')
