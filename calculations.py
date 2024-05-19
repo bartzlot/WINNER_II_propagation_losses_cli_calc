@@ -182,7 +182,7 @@ class WinnerCalculator():
                     pl_los = (40 * math.log10(self.d2) + 9.45 - 17.3 * math.log10(self.h_bs) - 
                             17.3 * math.log10(self.h_ms) + 2.7 * math.log10(self.frequency/5))
                     
-                    pl_d2_d1 = pl_los + 20 - 12.5 * nj_d1_d2 + 10 * nj_d1_d2 * math.log10(self.d1) + 3 * math.log10(self.frequency/5)
+                    pl_d2_d1 = pl_los + 20 - 12.5 * nj_d2_d1 + 10 * nj_d2_d1 * math.log10(self.d1) + 3 * math.log10(self.frequency/5)
 
                     return round(min(pl_d1_d2, pl_d2_d1), self.round)
 

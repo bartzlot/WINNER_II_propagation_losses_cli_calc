@@ -1,0 +1,11 @@
+Calculation name,Scenario,Line of sight,Frequency,Distance,Heigth of Base Station,Heigth of Media Station,Length of Grid(d1),Width of Grid(d2),Street Width(w),Result
+pom 1,B1,LOS,2.4,200.0,5.0,1.5,,,,85.492
+pom 2,B1,LOS,2.4,200.0,10.0,1.5,,,,80.284
+pom 3,B1,LOS,2.4,200.0,15.0,1.5,,,,77.238
+pom 4,B1,LOS,2.4,200.0,20.0,1.5,,,,75.076
+pom 5,B1,LOS,2.4,200.0,25.0,1.5,,,,73.4
+pom 6,B1,LOS,2.4,200.0,30.0,1.5,,,,72.03
+pom 7,B1,LOS,2.4,200.0,35.0,1.5,,,,70.872
+pom 8,B1,LOS,2.4,200.0,40.0,1.5,,,,69.869
+pom 9,B1,LOS,2.4,200.0,45.0,1.5,,,,68.984
+pom 10,B1,LOS,2.4,200.0,50.0,1.5,,,,68.192
